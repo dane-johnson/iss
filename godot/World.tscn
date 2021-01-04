@@ -1,0 +1,76 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://VRController.gd" type="Script" id=1]
+[ext_resource path="res://raw/lowearth.jpg" type="Texture" id=2]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://EnemyController.gd" type="Script" id=4]
+[ext_resource path="res://Looper.gd" type="Script" id=5]
+
+[sub_resource type="PanoramaSky" id=1]
+panorama = ExtResource( 2 )
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+fog_height_min = 0.0
+fog_height_max = 100.0
+ssao_quality = 0
+
+[sub_resource type="BoxShape" id=6]
+extents = Vector3( 10, 10, 10 )
+
+[sub_resource type="CubeMesh" id=3]
+size = Vector3( 20, 20, 20 )
+
+[sub_resource type="Shader" id=4]
+code = "shader_type spatial;
+
+render_mode cull_front, unshaded, skip_vertex_transform;
+
+varying float intensity;
+
+void vertex() {
+	intensity = mod(VERTEX.x, 1.0f);
+	VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	NORMAL = (MODELVIEW_MATRIX * vec4(NORMAL, 1.0)).xyz;
+}
+
+void fragment() {
+	ALPHA = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+
+[node name="World" type="Spatial"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 2 )
+
+[node name="VRController" type="Spatial" parent="."]
+script = ExtResource( 1 )
+debug_view = false
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -1, -3.82137e-15, 8.74228e-08, -8.74228e-08, 4.37114e-08, -1, 0, -1, -4.37114e-08, -0.777503, 1.62659, 13.8851 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+
+[node name="Area" type="Area" parent="Player"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Player/Area"]
+shape = SubResource( 6 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0693583, 0.0884962, -0.144223 )
+visible = false
+mesh = SubResource( 3 )
+material/0 = SubResource( 5 )
+
+[node name="EnemyController" type="Spatial" parent="."]
+script = ExtResource( 4 )
+[connection signal="area_exited" from="Player/Area" to="Player/Area" method="on_exit"]
+[connection signal="body_exited" from="Player/Area" to="Player/Area" method="on_exit"]
