@@ -22,10 +22,18 @@ config/icon="res://icon.png"
 [autoload]
 
 AsteroidPool="*res://AsteroidPool.gd"
+FPSInput="*res://FPSInput.gd"
 
 [gdnative]
 
 singletons=[ "res://addons/godot-openvr/godot_openvr.gdnlib" ]
+
+[input]
+
+fps_yaw={
+"deadzone": 0.5,
+"events": [  ]
+}
 
 [layer_names]
 
