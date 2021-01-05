@@ -1,19 +1,19 @@
-extends Area
+extends Node
 
-const loop_around = -0.80
+class_name Looper
 
-func on_exit(body):
+const box_extent = 10.0
+const asteroid_radius = 1.0
+
+static func loop(node : Spatial, offset : Vector3):
 	
-	print(body.name)
+	print(node.name)
 	
-	var loc = global_transform.origin - body.global_transform.origin
+	var loc = node.global_transform.origin - offset
 	var new_loc = loc
 	
-	if abs(loc.x) > 10.0:
-		new_loc.x *= loop_around
-	if abs(loc.y) > 10.0:
-		new_loc.y *= loop_around
-	if abs(loc.z) > 10.0:
-		new_loc.z *= loop_around
-		
-	body.global_transform.origin = -new_loc + global_transform.origin
+	for axis in range(3):
+		if abs(loc[axis]) > box_extent + asteroid_radius:
+			new_loc[axis] = (box_extent - asteroid_radius) * sign(loc[axis]) * -1.0
+
+	node.global_transform.origin = offset + new_loc

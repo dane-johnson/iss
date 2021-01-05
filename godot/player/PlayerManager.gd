@@ -2,10 +2,11 @@ extends Spatial
 
 export(bool) var vr_enabled = true
 
-var vr_player_prefab = preload("res://player/VRPlayer.tscn")
-var fps_player_prefab = preload("res://player/FPSPlayer.tscn")
+const vr_player_prefab = preload("res://player/VRPlayer.tscn")
+const fps_player_prefab = preload("res://player/FPSPlayer.tscn")
 
 onready var wrap_field = $"../WrapField"
+var player : Spatial
 
 func _ready():
 	if vr_enabled:
@@ -22,7 +23,7 @@ func _ready():
 		FPSInput.init()
 
 func create_player(prefab):
-	var player : Spatial = prefab.instance()
+	player = prefab.instance()
 	var remote_transform = RemoteTransform.new()
 	player.add_child(remote_transform)
 	remote_transform.remote_path = wrap_field.get_path()

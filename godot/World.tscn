@@ -1,10 +1,8 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://player/PlayerManager.gd" type="Script" id=1]
 [ext_resource path="res://raw/lowearth.jpg" type="Texture" id=2]
-[ext_resource path="res://prefabs/Asteroid.tscn" type="PackedScene" id=3]
 [ext_resource path="res://EnemyController.gd" type="Script" id=4]
-[ext_resource path="res://Looper.gd" type="Script" id=5]
 
 [sub_resource type="PanoramaSky" id=1]
 panorama = ExtResource( 2 )
@@ -65,7 +63,6 @@ script = ExtResource( 4 )
 [node name="WrapField" type="Area" parent="."]
 collision_layer = 0
 collision_mask = 2
-script = ExtResource( 5 )
 
 [node name="CollisionShape" type="CollisionShape" parent="WrapField"]
 shape = SubResource( 3 )
@@ -73,8 +70,5 @@ shape = SubResource( 3 )
 [node name="DebugNet" type="MeshInstance" parent="WrapField"]
 mesh = SubResource( 4 )
 material/0 = SubResource( 6 )
-
-[node name="Asteroid" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.767372, 2.33283, 10.7424 )
 [connection signal="area_exited" from="WrapField" to="WrapField" method="on_exit"]
 [connection signal="body_exited" from="WrapField" to="WrapField" method="on_exit"]
