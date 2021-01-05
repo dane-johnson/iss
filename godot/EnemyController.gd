@@ -9,7 +9,7 @@ var asteroids = []
 onready var player_manager = $"../PlayerManager";
 
 func _ready():
-	for i in range(3):
+	for _i in range(3):
 		create_asteroid(3, random_face())
 	
 func _process(_delta):
@@ -44,7 +44,7 @@ func random_face():
 func on_asteroid_hit(asteroid, laser):
 	if asteroid.size != 1:
 		for i in range(3):
-			create_asteroid(asteroid.size - 1, asteroid.global_transform.origin)
+			call_deferred("create_asteroid", asteroid.size - 1, asteroid.global_transform.origin)
 	laser.queue_free()
 	asteroids.erase(asteroid)
 	asteroid.queue_free()
@@ -53,7 +53,16 @@ func create_asteroid(size, location):
 	var velocity = Vector3(randf()-0.5,randf()-0.5,randf()-0.5).normalized() * speed_map[size]
 	
 	var my_asteroid = asteroid_prefab.instance()
+	my_asteroid.size = size
 	add_child(my_asteroid)
 	my_asteroid.translate(location)
 	my_asteroid.velocity = velocity
 	asteroids.append(my_asteroid)
+	
+	for loc in Looper.phantom_loc():
+		var phantom_mesh = my_asteroid.get_node("MeshInstance").duplicate()
+		my_asteroid.add_child(phantom_mesh)
+		phantom_mesh.global_transform.origin = location + loc
+		var phantom_area = my_asteroid.get_node("Area").duplicate()
+		my_asteroid.add_child(phantom_area)
+		phantom_area.global_transform.origin = location + loc

@@ -3,6 +3,7 @@ extends Node
 ## Interface between the raw input class and the FPS-mode scripts
 var pitch = 0.0
 var yaw = 0.0
+var fire = false
 
 var move_vec = Vector3.ZERO
 
@@ -25,6 +26,9 @@ func _input(event):
 			JOY_ANALOG_LY:
 				pitch = event.axis_value
 	## Mouse and Keyboard Input
+	if event is InputEventMouseButton:
+		if event.button_index == 1:
+			fire = event.pressed
 	## Pitch and Yaw
 	if event is InputEventMouseMotion:
 		yaw = -min(event.relative.x, mouse_sensitivity) / mouse_sensitivity

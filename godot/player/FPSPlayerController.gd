@@ -3,6 +3,8 @@ extends Spatial
 var velocity = Vector3.ZERO
 var look = Vector3(0.0, 0.0, 0.0);
 
+onready var wrist = $Wrist
+
 export(float) var max_speed = 2.0
 
 func _process(delta):
@@ -19,5 +21,9 @@ func _process(delta):
 	if velocity.length_squared() > max_speed * max_speed:
 		velocity = velocity.normalized() * max_speed
 	transform.origin = transform.origin + velocity * delta
+	
+	if FPSInput.fire:
+		wrist.fire()
+	
 	## All done, zero out axes
 	FPSInput.reset_axes()
